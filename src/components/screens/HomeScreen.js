@@ -2,12 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { StyleSheet, Text, View } from 'react-native'
 import { FetchPaginatedProducts } from '../action/ProductAction'
 import ProductListScreen from './ProductListScreen';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const HomeScreen = () => {
   const [ limit, setLimit ] = useState(10);
+  const [ allProducts, setAllProducts ] = useState([]);
   const [ refreshing, setRefreshing ] = useState(false);
-  const { data: products, isError, isFetching, refetch } = useQuery({
+  const { data: products = [], isError, isFetching, refetch } = useQuery({
     queryKey: [ 'products', limit ],         // Query key for caching and invalidation
     queryFn: () => FetchPaginatedProducts(limit),
     keepPreviousData: true,
@@ -18,7 +19,14 @@ const HomeScreen = () => {
   };
 
   const hasMoreData = useMemo(() => {
-    return products && products.length === limit;
+    return products?.products?.length === limit;
+  }, [ products ]);
+
+
+  useEffect(() => {
+    if (Array.isArray(products?.products) && products.products.length > 0) {
+      setAllProducts(products.products);
+    }
   }, [ products ]);
 
   if (isError) {
@@ -42,7 +50,7 @@ const HomeScreen = () => {
       </Text>
 
       <ProductListScreen
-        products={ products }
+        products={ allProducts }
         isFetching={ isFetching }
         hasMoreData={ hasMoreData }
         refreshing={ refreshing }

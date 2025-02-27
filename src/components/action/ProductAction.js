@@ -1,5 +1,5 @@
 import axios from "axios";
-import { fetchAllCategory, fetchAllProducts } from "../../constants/UrlConstant";
+import { fetchAllCategory, fetchAllProducts, fetchCategoryProducts } from "../../constants/UrlConstant";
 
 export const FetchAllProducts = async () => {
   const response = await axios.get(fetchAllProducts);
@@ -17,6 +17,11 @@ export const FetchALlCategories = async () => {
 };
 
 export const FetchCategoryProducts = async (selectedCategory) => {
-  const response = await axios.get(`${fetchAllProducts}/${selectedCategory}`);
+  const response = await axios.get(`${fetchCategoryProducts}?type=${selectedCategory}`);
   return response.data;
 };
+
+export const FetchProductByID = async (id) => {
+  const response = await axios.get(`${fetchAllProducts}/${id}`);
+  return response.data;
+}

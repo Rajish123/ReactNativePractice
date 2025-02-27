@@ -1,3 +1,3 @@
-export const fetchAllProducts = "https://fakestoreapi.com/products";
-export const fetchAllCategory = "https://fakestoreapi.com/products/categories";
-export const fetchCategoryProducts = "https://fakestoreapi.com/products/category"
+export const fetchAllProducts = "https://fakestoreapi.in/api/products";
+export const fetchAllCategory = "https://fakestoreapi.in/api/products/category";
+export const fetchCategoryProducts = "https://fakestoreapi.in/api/products/category";

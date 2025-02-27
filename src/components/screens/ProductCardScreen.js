@@ -1,12 +1,18 @@
 import React, { useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import ProductCardModalScreen from './ProductCardModalScreen';
+import { useNavigation } from '@react-navigation/native';
 
 const ProductCardScreen = ({ item }) => {
+  const navigation = useNavigation();
   const [ modalVisible, setModalVisible ] = useState(false);
 
   const handleLongPress = () => {
     setModalVisible(true);
+  };
+
+  const handleOnProductClick = (id) => {
+    navigation.navigate('ProductDetails', { productID: id })
   };
 
   return (
@@ -14,6 +20,7 @@ const ProductCardScreen = ({ item }) => {
       <TouchableOpacity
         style={ styles.productCard }
         onLongPress={ handleLongPress }
+        onPress={ () => handleOnProductClick(item.id) }
       >
         <Image source={ { uri: item.image } } style={ styles.productImage } />
 
