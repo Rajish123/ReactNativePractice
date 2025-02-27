@@ -1,7 +1,7 @@
 import { useRoute } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { ActivityIndicator, Image, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { FetchProductByID } from '../action/ProductAction';
 
 const ProductDetailScreen = () => {
@@ -9,15 +9,23 @@ const ProductDetailScreen = () => {
 
   const { productID } = route.params;
 
+  const [ refreshing, setRefreshing ] = useState(false);
+
   const {
     data: productDetail = {},
     isError,
-    isFetching
+    isFetching,
+    refetch
   } = useQuery({
     queryKey: [ 'productDetail', productID ],
     queryFn: () => FetchProductByID(productID),
     enabled: productID > 0
   });
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    refetch().finally(() => setRefreshing(false));
+  };
 
   if (isError) {
     return (
@@ -28,10 +36,19 @@ const ProductDetailScreen = () => {
   };
 
   return (
-    <ScrollView style={ styles.container }>
+    <ScrollView
+      style={ styles.container }
+      refreshControl={
+        <RefreshControl
+          refreshing={ refreshing }
+          onRefresh={ onRefresh }
+          colors={ [ '#007bff' ] }
+        />
+      }
+    >
       {
         isFetching ?
-          <View>
+          <View style={ styles.loadingState }>
             <ActivityIndicator size="small" color="#007bff" />
           </View>
           :
@@ -73,6 +90,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: '#f9f9f9',
+  },
+  loadingState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginTop: 50
   },
   center: {
     flex: 1,
