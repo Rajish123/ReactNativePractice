@@ -21,7 +21,7 @@ const ProductListScreen = ({ products, isFetching, hasMoreData, refreshing, onRe
       renderItem={ ({ item }) => <ProductCardScreen item={ item } /> }
       ListFooterComponent={
         isFetching ? (
-          <View style={ styles.loadMoreContainer }>
+          <View>
             <ActivityIndicator size="small" color="#007bff" />
           </View>
         ) : hasMoreData ? (
